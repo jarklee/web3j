@@ -1831,10 +1831,7 @@ public class SolidityFunctionWrapper extends Generator {
 
         transactionMethodBuilder
                 .addStatement(
-                        "$T valueList = staticExtractEventParametersWithLog("
-                                + buildEventDefinitionName(functionName)
-                                + ", "
-                                + "transactionReceipt)",
+                        "$T valueList = transactionReceipt.getLogs().stream().map(log -> staticExtractEventParametersWithLog(" + buildEventDefinitionName(functionName) + ", log)).filter(Objects::nonNull).toList()",
                         ParameterizedTypeName.get(List.class, Contract.EventValuesWithLog.class))
                 .addStatement(
                         "$1T responses = new $1T(valueList.size())",

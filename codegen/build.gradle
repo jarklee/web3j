@@ -13,6 +13,18 @@ dependencies {
     implementation("org.junit.vintage:junit-vintage-engine:$junitVersion")
 }
 
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'org.web3j.codegen.SolidityFunctionWrapperGenerator'
+    }
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
+}
+
 file("src/test/resources/solidity").listFiles().each { File file ->
     def contractFile = file.listFiles().find({
         it.getName().endsWith(".sol")
