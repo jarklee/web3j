@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
@@ -1831,8 +1832,9 @@ public class SolidityFunctionWrapper extends Generator {
 
         transactionMethodBuilder
                 .addStatement(
-                        "$T valueList = transactionReceipt.getLogs().stream().map(log -> staticExtractEventParametersWithLog(" + buildEventDefinitionName(functionName) + ", log)).filter(Objects::nonNull).toList()",
-                        ParameterizedTypeName.get(List.class, Contract.EventValuesWithLog.class))
+                        "$1T valueList = transactionReceipt.getLogs().stream().map(log -> staticExtractEventParametersWithLog(" + buildEventDefinitionName(functionName) + ", log)).filter($2T::nonNull).toList()",
+                        ParameterizedTypeName.get(List.class, Contract.EventValuesWithLog.class),
+                        Objects.class)
                 .addStatement(
                         "$1T responses = new $1T(valueList.size())",
                         ParameterizedTypeName.get(
